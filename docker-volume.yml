@@ -5,3 +5,10 @@ volumes:
     directory:
       - ${here}/volumes/fluentd/fluentd/etc
       - ${here}/volumes/fluentd/fluentd/plugins
+
+  apt-cacher-ng:
+    hostpath: ${here}/volumes/apt-cacher-ng
+    vboxpath: /var/lib/sximada/apt-cacher-ng
+    dmode: 777
+    directory:
+      - ${here}/volumes/apt-cacher-ng/var/cache/apt-cacher-ng

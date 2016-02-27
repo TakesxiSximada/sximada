@@ -1,27 +1,52 @@
-nginx:
-  image: nginx:latest
-  log_driver: fluentd
-  log_opt:
-    fluentd-address: localhost:24224
-    fluentd-tag: docker.{{.FullID}}
-  expose:
-    - 80
-    - 443
-  ports:
-    - 80:80
-    - 443:443
+version: '2'
 
-fluentd:
-  image: fluent/fluentd:latest
-  env_file:
-    - databag/fluentd.env
-  ports:
-    - 24224:24224
-  volumes_from:
-    - volume-fluentd
+services:
+  nginx:
+    image: nginx:latest
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        fluentd-tag: docker.{{.FullID}}
+    depends_on:
+      - fluentd
+    expose:
+      - 80
+      - 443
+    ports:
+      - 80:80
+      - 443:443
 
-volume-fluentd:
-  image: busybox:latest
-  volumes:
-    - /var/lib/sximada/fluentd/fluentd/etc:/fluentd/etc
-    - /var/lib/sximada/fluentd/fluentd/plugins:/fluentd/plugins
+  fluentd:
+    image: fluent/fluentd:latest
+    env_file:
+      - databag/fluentd.env
+    ports:
+      - 24224:24224
+    volumes_from:
+      - volume-fluentd
+
+  apt-cacher-ng:
+    image: sameersbn/apt-cacher-ng:latest
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        fluentd-tag: docker.{{.FullID}}
+    depends_on:
+      - fluentd
+    ports:
+      - 3142:3142
+    volumes_from:
+      - volume-apt-cacher-ng
+
+  volume-fluentd:
+    image: busybox:latest
+    volumes:
+      - /var/lib/sximada/fluentd/fluentd/etc:/fluentd/etc
+      - /var/lib/sximada/fluentd/fluentd/plugins:/fluentd/plugins
+
+  volume-apt-cacher-ng:
+    image: busybox:latest
+    volumes:
+      - /var/lib/sximada/apt-cacher-ng/var/cache/apt-cacher-ng:/var/cache/apt-cacher-ng
