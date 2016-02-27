@@ -1,0 +1,7 @@
+volumes:
+  fluentd:
+    hostpath: ${here}/volumes/fluentd
+    vboxpath: /var/lib/sximada/fluentd
+    directory:
+      - ${here}/volumes/fluentd/fluentd/etc
+      - ${here}/volumes/fluentd/fluentd/plugins

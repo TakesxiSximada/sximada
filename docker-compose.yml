@@ -1,8 +1,27 @@
 nginx:
   image: nginx:latest
+  log_driver: fluentd
+  log_opt:
+    fluentd-address: localhost:24224
+    fluentd-tag: docker.{{.FullID}}
   expose:
     - 80
     - 443
   ports:
     - 80:80
     - 443:443
+
+fluentd:
+  image: fluent/fluentd:latest
+  env_file:
+    - databag/fluentd.env
+  ports:
+    - 24224:24224
+  volumes_from:
+    - volume-fluentd
+
+volume-fluentd:
+  image: busybox:latest
+  volumes:
+    - /var/lib/sximada/fluentd/fluentd/etc:/fluentd/etc
+    - /var/lib/sximada/fluentd/fluentd/plugins:/fluentd/plugins
