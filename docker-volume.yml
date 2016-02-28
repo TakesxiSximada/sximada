@@ -1,4 +1,10 @@
 volumes:
+  jupyter:
+    hostpath: ${here}/volumes/jupyter
+    vboxpath: /var/lib/sximada/jupyter
+    directory:
+      - ${here}/volumes/jupyter/notebooks
+
   fluentd:
     hostpath: ${here}/volumes/fluentd
     vboxpath: /var/lib/sximada/fluentd

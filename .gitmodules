@@ -1,0 +1,9 @@
+[submodule "djangoexample"]
+	path = djangoexample
+	url = git@github.com:TakesxiSximada/djangoexample.git
+[submodule "docker-fake-sns"]
+	path = docker-fake-sns
+	url = git@github.com:feathj/docker-fake-sns.git
+[submodule "warehouse"]
+	path = warehouse
+	url = git@github.com:pypa/warehouse.git

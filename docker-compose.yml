@@ -1,6 +1,9 @@
 version: '2'
 
 services:
+  djangoexample:
+    build: djangoexample
+
   nginx:
     image: nginx:latest
     logging:
@@ -27,7 +30,7 @@ services:
       - volume-fluentd
 
   apt-cacher-ng:
-    image: sameersbn/apt-cacher-ng:latest
+    build: apt-cacher-ng
     logging:
       driver: fluentd
       options:
@@ -50,3 +53,181 @@ services:
     image: busybox:latest
     volumes:
       - /var/lib/sximada/apt-cacher-ng/var/cache/apt-cacher-ng:/var/cache/apt-cacher-ng
+
+  rundeck:
+    image: jordan/rundeck:latest
+
+  elasticsearch:
+    image: elasticsearch:latest
+
+  mongodb:
+    image: mongo:latest
+
+  postgresql:
+    image: postgres:latest
+
+  logstash:
+    image: logstash:latest
+
+  rabbitmq:
+    image: rabbitmq:latest
+
+  redis:
+    image: redis:latest
+
+  mysql:
+    image: mysql:latest
+
+  fake_sns:
+    build: docker-fake-sns
+
+  fake-s3:
+    image: lphoward/fake-s3:latest
+    volumes_from:
+      - volume-fake-s3
+
+  volume-fake-s3:
+    image: busybox:latest
+    volumes:
+      - /var/lib/sximada/fake-s3/fakes3_root:/fakes3_root
+
+  openstack-swift:
+    image: serverascode/swift-onlyone
+
+  node:
+    image: node:latest
+
+  wordpress:
+    image: wordpress:latest
+
+  httpd:
+    image: httpd:latest
+
+  java:
+    image: java:latest
+
+  python:
+    image: python:latest
+
+  tomcat:
+    image: tomcat:latest
+
+  php:
+    image: php:latest
+
+  golang:
+    image: golang:latest
+
+  alpine:
+    image: alpine:latest
+
+  haproxy:
+    image: haproxy:latest
+
+  mariadb:
+    image: mariadb:latest
+
+  ruby:
+    image: ruby:latest
+
+  rails:
+    image: rails:latest
+
+  memcached:
+    image: memcached:latest
+
+  cassandra:
+    image: cassandra:latest
+
+  cassandra:
+    image: cassandra:latest
+
+  kibana:
+    image: kibana:latest
+
+  sentry:
+    image: sentry:latest
+
+  redmine:
+    image: redmine:latest
+
+  jenkins:
+    image: jenkins:latest
+
+  rethinkdb:
+    image: rethinkdb:latest
+
+  haskell:
+    image: haskell:latest
+
+  clojure:
+    image: clojure:latest
+
+  julia:
+    image: julia:latest
+
+  erlang:
+    image: erlang:latest
+
+  aerospike:
+    image: aerospike:latest
+
+  owncloud:
+    image: owncloud:latest
+
+  mono:
+    image: mono:latest
+
+  odoo:
+    image: odoo:latest
+
+  tensorflow:
+    image: b.gcr.io/tensorflow/tensorflow:latest
+
+  google-auth-proxy:
+    image: a5huynh/google-auth-proxy
+
+  ffmpeg:
+    image: cellofellow/ffmpeg
+
+  powerdns:
+    image: tutum/powerdns
+
+  tor:
+    image: chriswayg/tor-alpine
+
+  registry:
+    image: registry:2.0
+
+  warehouse:
+    build: warehouse
+
+  npm-proxy-cache:
+    image: kudoz/npm-proxy-cache:latest
+
+  docker-python:
+    build: docker-python
+
+  sinopia:  # Private npm repository server
+    image: rnbwd/sinopia
+
+  jupyter:  # jupyter notebook
+    image: jupyter/notebook
+    volumes_from:
+      - volume-jupyter
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        fluentd-tag: docker.{{.FullID}}
+    depends_on:
+      - fluentd
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+
+  volume-jupyter:
+    image: busybox:latest
+    volumes:
+      - /var/lib/sximada/jupyter/notebooks:/notebooks
