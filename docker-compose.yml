@@ -192,6 +192,7 @@ services:
 
   powerdns:
     image: tutum/powerdns
+    # image: secns/pdns:latest
 
   tor:
     image: chriswayg/tor-alpine
@@ -231,3 +232,14 @@ services:
     image: busybox:latest
     volumes:
       - /var/lib/sximada/jupyter/notebooks:/notebooks
+
+  mitmproxy:
+    image: mitmproxy/mitmproxy:latest
+    expose:
+      - 8080
+      - 8081
+
+  volume-mitmproxy:
+    image: busybox:latest
+    volumes:
+      - /var/lib/sximada/mitmproxy/certs:/certs

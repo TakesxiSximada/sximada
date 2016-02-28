@@ -1,4 +1,10 @@
 volumes:
+  mitmproxy:
+    hostpath: ${here}/volumes/mitmproxy
+    vboxpath: /var/lib/sximada/mitmproxy
+    directory:
+      - ${here}/volumes/mitmproxy/certs
+
   jupyter:
     hostpath: ${here}/volumes/jupyter
     vboxpath: /var/lib/sximada/jupyter
