@@ -206,6 +206,9 @@ services:
   npm-proxy-cache:
     image: kudoz/npm-proxy-cache:latest
 
+  # gitorious:
+  #   build: gitorious-docker
+
   docker-python:
     build: docker-python
 

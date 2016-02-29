@@ -7,3 +7,6 @@
 [submodule "warehouse"]
 	path = warehouse
 	url = git@github.com:pypa/warehouse.git
+[submodule "gitorious-docker"]
+	path = gitorious-docker
+	url = https://git.gitorious.org/gitorious/gitorious-docker.git
