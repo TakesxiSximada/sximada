@@ -3,6 +3,27 @@ version: '2'
 services:
   djangoexample:
     build: djangoexample
+    env_file:
+      - databag/djangoexample.env
+    volumes_from:
+      - volume-djangoexample
+    links:
+      - redis:redis.internal
+      - mysql:mysql.internal
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+
+  volume-djangoexample:
+    image: busybox
+    volumes:
+      - /var/lib/sximada/src/djangoexample:/srv/sximada/djangoexample/src
+      - /var/lib/sximada/djangoexample/var:/srv/sximada/djangoexample/var
+      - /var/lib/sximada/djangoexample/log:/srv/sximada/djangoexample/log
+      - /var/lib/sximada/djangoexample/etc:/srv/sximada/djangoexample/etc
+      - /var/lib/sximada/djangoexample/settings:/srv/sximada/djangoexample/settings
+      - /var/lib/sximada/djangoexample/tmp:/srv/sximada/djangoexample/tmp
 
   nginx:
     image: nginx:latest
@@ -77,6 +98,17 @@ services:
 
   mysql:
     image: mysql:latest
+    env_file:
+      - databag/mysql.env
+    volumes_from:
+      - volume-mysql
+
+  volume-mysql:
+    image: busybox
+    volumes:
+      - /var/lib/sximada/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - /var/lib/sximada/mysql/var/lib/mysql:/var/lib/mysql
+      - /var/lib/sximada/mysql/var/log/mysql:/var/log/mysql
 
   fake_sns:
     build: docker-fake-sns

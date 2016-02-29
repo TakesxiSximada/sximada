@@ -1,4 +1,29 @@
 volumes:
+  djangoexample-src:
+    hostpath: ${here}/djangoexample
+    vboxpath: /var/lib/sximada/src/djangoexample
+
+  djangoexample:
+    hostpath: ${here}/volumes/djangoexample
+    vboxpath: /var/lib/sximada/djangoexample
+    directory:
+      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/var
+      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/log
+      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/etc
+      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/settings
+      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/tmp
+
+  mysql:
+    hostpath: ${here}/volumes/mysql
+    vboxpath: /var/lib/sximada/mysql
+    uid: 999
+    gid: 999
+    directory:
+      - ${here}/volumes/mysql/docker-entrypoint-initdb.d
+      - ${here}/volumes/mysql/var/lib/mysql
+      - ${here}/volumes/mysql/var/log/mysql
+
+
   mitmproxy:
     hostpath: ${here}/volumes/mitmproxy
     vboxpath: /var/lib/sximada/mitmproxy
