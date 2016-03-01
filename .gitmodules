@@ -10,3 +10,6 @@
 [submodule "gitorious-docker"]
 	path = gitorious-docker
 	url = https://git.gitorious.org/gitorious/gitorious-docker.git
+[submodule "docker-swift-onlyone"]
+	path = docker-swift-onlyone
+	url = https://github.com/ccollicutt/docker-swift-onlyone.git

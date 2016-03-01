@@ -1,4 +1,12 @@
 volumes:
+  nginx:
+    hostpath: ${here}/volumes/nginx
+    vboxpath: /var/lib/gunosy/service_push/nginx
+    uid: 104
+    gid: 107
+    directory:
+      - ${here}/volumes/nginx/etc/nginx/conf.d
+
   djangoexample-src:
     hostpath: ${here}/djangoexample
     vboxpath: /var/lib/sximada/src/djangoexample
