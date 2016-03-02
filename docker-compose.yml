@@ -1,280 +1,297 @@
 version: '2'
 
 services:
-  djangoexample:
-    build: djangoexample
-    env_file:
-      - databag/djangoexample.env
-    volumes_from:
-      - volume-djangoexample
-    links:
-      - redis:redis.internal
-      - mysql:mysql.internal
+  sximada:
+    image: nginx
     expose:
-      - 8000
+      - "80"
+      - "443"
     ports:
-      - 8000:8000
+      - "80:80"
+      - "443:443"
+    volumes_from:
+      - volume-sximada
 
-  volume-djangoexample:
+  volume-sximada:
     image: busybox
     volumes:
-      - /var/lib/sximada/src/djangoexample:/srv/sximada/djangoexample/src
-      - /var/lib/sximada/djangoexample/var:/srv/sximada/djangoexample/var
-      - /var/lib/sximada/djangoexample/log:/srv/sximada/djangoexample/log
-      - /var/lib/sximada/djangoexample/etc:/srv/sximada/djangoexample/etc
-      - /var/lib/sximada/djangoexample/settings:/srv/sximada/djangoexample/settings
-      - /var/lib/sximada/djangoexample/tmp:/srv/sximada/djangoexample/tmp
+      - /var/lib/sximada/sximada/etc/nginx/conf.d:/etc/nginx/conf.d
+      - /var/lib/sximada/sximada/etc/ssl/private/sximada:/etc/ssl/private/sximada
 
-  nginx:
-    image: nginx:latest
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        fluentd-tag: docker.{{.FullID}}
-    depends_on:
-      - fluentd
-    expose:
-      - 80
-      - 443
-    ports:
-      - 80:80
-      - 443:443
+  # djangoexample:
+  #   build: djangoexample
+  #   env_file:
+  #     - databag/djangoexample.env
+  #   volumes_from:
+  #     - volume-djangoexample
+  #   links:
+  #     - redis:redis.internal
+  #     - mysql:mysql.internal
+  #   expose:
+  #     - 8000
+  #   ports:
+  #     - 8000:8000
 
-  fluentd:
-    image: fluent/fluentd:latest
-    env_file:
-      - databag/fluentd.env
-    ports:
-      - 24224:24224
-    volumes_from:
-      - volume-fluentd
+  # volume-djangoexample:
+  #   image: busybox
+  #   volumes:
+  #     - /var/lib/sximada/src/djangoexample:/srv/sximada/djangoexample/src
+  #     - /var/lib/sximada/djangoexample/var:/srv/sximada/djangoexample/var
+  #     - /var/lib/sximada/djangoexample/log:/srv/sximada/djangoexample/log
+  #     - /var/lib/sximada/djangoexample/etc:/srv/sximada/djangoexample/etc
+  #     - /var/lib/sximada/djangoexample/settings:/srv/sximada/djangoexample/settings
+  #     - /var/lib/sximada/djangoexample/tmp:/srv/sximada/djangoexample/tmp
 
-  apt-cacher-ng:
-    build: apt-cacher-ng
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        fluentd-tag: docker.{{.FullID}}
-    depends_on:
-      - fluentd
-    ports:
-      - 3142:3142
-    volumes_from:
-      - volume-apt-cacher-ng
+  # nginx:
+  #   image: nginx:latest
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       fluentd-address: localhost:24224
+  #       fluentd-tag: docker.{{.FullID}}
+  #   depends_on:
+  #     - fluentd
+  #   expose:
+  #     - 80
+  #     - 443
+  #   ports:
+  #     - 80:80
+  #     - 443:443
 
-  volume-fluentd:
-    image: busybox:latest
-    volumes:
-      - /var/lib/sximada/fluentd/fluentd/etc:/fluentd/etc
-      - /var/lib/sximada/fluentd/fluentd/plugins:/fluentd/plugins
+  # fluentd:
+  #   image: fluent/fluentd:latest
+  #   env_file:
+  #     - databag/fluentd.env
+  #   ports:
+  #     - 24224:24224
+  #   volumes_from:
+  #     - volume-fluentd
 
-  volume-apt-cacher-ng:
-    image: busybox:latest
-    volumes:
-      - /var/lib/sximada/apt-cacher-ng/var/cache/apt-cacher-ng:/var/cache/apt-cacher-ng
+  # apt-cacher-ng:
+  #   build: apt-cacher-ng
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       fluentd-address: localhost:24224
+  #       fluentd-tag: docker.{{.FullID}}
+  #   depends_on:
+  #     - fluentd
+  #   ports:
+  #     - 3142:3142
+  #   volumes_from:
+  #     - volume-apt-cacher-ng
 
-  rundeck:
-    image: jordan/rundeck:latest
+  # volume-fluentd:
+  #   image: busybox:latest
+  #   volumes:
+  #     - /var/lib/sximada/fluentd/fluentd/etc:/fluentd/etc
+  #     - /var/lib/sximada/fluentd/fluentd/plugins:/fluentd/plugins
 
-  elasticsearch:
-    image: elasticsearch:latest
+  # volume-apt-cacher-ng:
+  #   image: busybox:latest
+  #   volumes:
+  #     - /var/lib/sximada/apt-cacher-ng/var/cache/apt-cacher-ng:/var/cache/apt-cacher-ng
 
-  mongodb:
-    image: mongo:latest
+  # rundeck:
+  #   image: jordan/rundeck:latest
 
-  postgresql:
-    image: postgres:latest
+  # elasticsearch:
+  #   image: elasticsearch:latest
 
-  logstash:
-    image: logstash:latest
+  # mongodb:
+  #   image: mongo:latest
 
-  rabbitmq:
-    image: rabbitmq:latest
+  # postgresql:
+  #   image: postgres:latest
 
-  redis:
-    image: redis:latest
+  # logstash:
+  #   image: logstash:latest
 
-  mysql:
-    image: mysql:latest
-    env_file:
-      - databag/mysql.env
-    volumes_from:
-      - volume-mysql
+  # rabbitmq:
+  #   image: rabbitmq:latest
 
-  volume-mysql:
-    image: busybox
-    volumes:
-      - /var/lib/sximada/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - /var/lib/sximada/mysql/var/lib/mysql:/var/lib/mysql
-      - /var/lib/sximada/mysql/var/log/mysql:/var/log/mysql
+  # redis:
+  #   image: redis:latest
 
-  fake_sns:
-    build: docker-fake-sns
+  # mysql:
+  #   image: mysql:latest
+  #   env_file:
+  #     - databag/mysql.env
+  #   volumes_from:
+  #     - volume-mysql
 
-  fake-s3:
-    image: lphoward/fake-s3:latest
-    volumes_from:
-      - volume-fake-s3
+  # volume-mysql:
+  #   image: busybox
+  #   volumes:
+  #     - /var/lib/sximada/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+  #     - /var/lib/sximada/mysql/var/lib/mysql:/var/lib/mysql
+  #     - /var/lib/sximada/mysql/var/log/mysql:/var/log/mysql
 
-  volume-fake-s3:
-    image: busybox:latest
-    volumes:
-      - /var/lib/sximada/fake-s3/fakes3_root:/fakes3_root
+  # fake_sns:
+  #   build: docker-fake-sns
 
-  openstack-swift:
-    image: serverascode/swift-onlyone
+  # fake-s3:
+  #   image: lphoward/fake-s3:latest
+  #   volumes_from:
+  #     - volume-fake-s3
 
-  node:
-    image: node:latest
+  # volume-fake-s3:
+  #   image: busybox:latest
+  #   volumes:
+  #     - /var/lib/sximada/fake-s3/fakes3_root:/fakes3_root
 
-  wordpress:
-    image: wordpress:latest
+  # openstack-swift:
+  #   image: serverascode/swift-onlyone
 
-  httpd:
-    image: httpd:latest
+  # node:
+  #   image: node:latest
 
-  java:
-    image: java:latest
+  # wordpress:
+  #   image: wordpress:latest
 
-  python:
-    image: python:latest
+  # httpd:
+  #   image: httpd:latest
 
-  tomcat:
-    image: tomcat:latest
+  # java:
+  #   image: java:latest
 
-  php:
-    image: php:latest
+  # python:
+  #   image: python:latest
 
-  golang:
-    image: golang:latest
+  # tomcat:
+  #   image: tomcat:latest
 
-  alpine:
-    image: alpine:latest
+  # php:
+  #   image: php:latest
 
-  haproxy:
-    image: haproxy:latest
+  # golang:
+  #   image: golang:latest
 
-  mariadb:
-    image: mariadb:latest
+  # alpine:
+  #   image: alpine:latest
 
-  ruby:
-    image: ruby:latest
+  # haproxy:
+  #   image: haproxy:latest
 
-  rails:
-    image: rails:latest
+  # mariadb:
+  #   image: mariadb:latest
 
-  memcached:
-    image: memcached:latest
+  # ruby:
+  #   image: ruby:latest
 
-  cassandra:
-    image: cassandra:latest
+  # rails:
+  #   image: rails:latest
 
-  cassandra:
-    image: cassandra:latest
+  # memcached:
+  #   image: memcached:latest
 
-  kibana:
-    image: kibana:latest
+  # cassandra:
+  #   image: cassandra:latest
 
-  sentry:
-    image: sentry:latest
+  # cassandra:
+  #   image: cassandra:latest
 
-  redmine:
-    image: redmine:latest
+  # kibana:
+  #   image: kibana:latest
 
-  jenkins:
-    image: jenkins:latest
+  # sentry:
+  #   image: sentry:latest
 
-  rethinkdb:
-    image: rethinkdb:latest
+  # redmine:
+  #   image: redmine:latest
 
-  haskell:
-    image: haskell:latest
+  # jenkins:
+  #   image: jenkins:latest
 
-  clojure:
-    image: clojure:latest
+  # rethinkdb:
+  #   image: rethinkdb:latest
 
-  julia:
-    image: julia:latest
+  # haskell:
+  #   image: haskell:latest
 
-  erlang:
-    image: erlang:latest
+  # clojure:
+  #   image: clojure:latest
 
-  aerospike:
-    image: aerospike:latest
+  # julia:
+  #   image: julia:latest
 
-  owncloud:
-    image: owncloud:latest
+  # erlang:
+  #   image: erlang:latest
 
-  mono:
-    image: mono:latest
+  # aerospike:
+  #   image: aerospike:latest
 
-  odoo:
-    image: odoo:latest
+  # owncloud:
+  #   image: owncloud:latest
 
-  tensorflow:
-    image: b.gcr.io/tensorflow/tensorflow:latest
+  # mono:
+  #   image: mono:latest
 
-  google-auth-proxy:
-    image: a5huynh/google-auth-proxy
+  # odoo:
+  #   image: odoo:latest
 
-  ffmpeg:
-    image: cellofellow/ffmpeg
+  # tensorflow:
+  #   image: b.gcr.io/tensorflow/tensorflow:latest
 
-  powerdns:
-    image: tutum/powerdns
-    # image: secns/pdns:latest
+  # google-auth-proxy:
+  #   image: a5huynh/google-auth-proxy
 
-  tor:
-    image: chriswayg/tor-alpine
+  # ffmpeg:
+  #   image: cellofellow/ffmpeg
 
-  registry:
-    image: registry:2.0
+  # powerdns:
+  #   image: tutum/powerdns
+  #   # image: secns/pdns:latest
 
-  warehouse:
-    build: warehouse
+  # tor:
+  #   image: chriswayg/tor-alpine
 
-  npm-proxy-cache:
-    image: kudoz/npm-proxy-cache:latest
+  # registry:
+  #   image: registry:2.0
 
-  # gitorious:
-  #   build: gitorious-docker
+  # warehouse:
+  #   build: warehouse
 
-  docker-python:
-    build: docker-python
+  # npm-proxy-cache:
+  #   image: kudoz/npm-proxy-cache:latest
 
-  sinopia:  # Private npm repository server
-    image: rnbwd/sinopia
+  # # gitorious:
+  # #   build: gitorious-docker
 
-  jupyter:  # jupyter notebook
-    image: jupyter/notebook
-    volumes_from:
-      - volume-jupyter
-    logging:
-      driver: fluentd
-      options:
-        fluentd-address: localhost:24224
-        fluentd-tag: docker.{{.FullID}}
-    depends_on:
-      - fluentd
-    expose:
-      - 8888
-    ports:
-      - 8888:8888
+  # docker-python:
+  #   build: docker-python
 
-  volume-jupyter:
-    image: busybox:latest
-    volumes:
-      - /var/lib/sximada/jupyter/notebooks:/notebooks
+  # sinopia:  # Private npm repository server
+  #   image: rnbwd/sinopia
 
-  mitmproxy:
-    image: mitmproxy/mitmproxy:latest
-    expose:
-      - 8080
-      - 8081
+  # jupyter:  # jupyter notebook
+  #   image: jupyter/notebook
+  #   volumes_from:
+  #     - volume-jupyter
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       fluentd-address: localhost:24224
+  #       fluentd-tag: docker.{{.FullID}}
+  #   depends_on:
+  #     - fluentd
+  #   expose:
+  #     - 8888
+  #   ports:
+  #     - 8888:8888
 
-  volume-mitmproxy:
-    image: busybox:latest
-    volumes:
-      - /var/lib/sximada/mitmproxy/certs:/certs
+  # volume-jupyter:
+  #   image: busybox:latest
+  #   volumes:
+  #     - /var/lib/sximada/jupyter/notebooks:/notebooks
+
+  # mitmproxy:
+  #   image: mitmproxy/mitmproxy:latest
+  #   expose:
+  #     - 8080
+  #     - 8081
+
+  # volume-mitmproxy:
+  #   image: busybox:latest
+  #   volumes:
+  #     - /var/lib/sximada/mitmproxy/certs:/certs

@@ -1,59 +1,60 @@
 volumes:
-  nginx:
-    hostpath: ${here}/volumes/nginx
-    vboxpath: /var/lib/gunosy/service_push/nginx
+  sximada:
+    hostpath: ${here}/volumes/sximada
+    vboxpath: /var/lib/sximada/sximada
     uid: 104
     gid: 107
     directory:
-      - ${here}/volumes/nginx/etc/nginx/conf.d
+      - ${here}/volumes/sximada/etc/nginx/conf.d
+      - ${here}/volumes/sximada/etc/ssl/private/sximada
 
-  djangoexample-src:
-    hostpath: ${here}/djangoexample
-    vboxpath: /var/lib/sximada/src/djangoexample
+  # djangoexample-src:
+  #   hostpath: ${here}/djangoexample
+  #   vboxpath: /var/lib/sximada/src/djangoexample
 
-  djangoexample:
-    hostpath: ${here}/volumes/djangoexample
-    vboxpath: /var/lib/sximada/djangoexample
-    directory:
-      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/var
-      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/log
-      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/etc
-      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/settings
-      - ${here}/volumes/djangoexample/srv/sximada/djangoexample/tmp
+  # djangoexample:
+  #   hostpath: ${here}/volumes/djangoexample
+  #   vboxpath: /var/lib/sximada/djangoexample
+  #   directory:
+  #     - ${here}/volumes/djangoexample/srv/sximada/djangoexample/var
+  #     - ${here}/volumes/djangoexample/srv/sximada/djangoexample/log
+  #     - ${here}/volumes/djangoexample/srv/sximada/djangoexample/etc
+  #     - ${here}/volumes/djangoexample/srv/sximada/djangoexample/settings
+  #     - ${here}/volumes/djangoexample/srv/sximada/djangoexample/tmp
 
-  mysql:
-    hostpath: ${here}/volumes/mysql
-    vboxpath: /var/lib/sximada/mysql
-    uid: 999
-    gid: 999
-    directory:
-      - ${here}/volumes/mysql/docker-entrypoint-initdb.d
-      - ${here}/volumes/mysql/var/lib/mysql
-      - ${here}/volumes/mysql/var/log/mysql
+  # mysql:
+  #   hostpath: ${here}/volumes/mysql
+  #   vboxpath: /var/lib/sximada/mysql
+  #   uid: 999
+  #   gid: 999
+  #   directory:
+  #     - ${here}/volumes/mysql/docker-entrypoint-initdb.d
+  #     - ${here}/volumes/mysql/var/lib/mysql
+  #     - ${here}/volumes/mysql/var/log/mysql
 
 
-  mitmproxy:
-    hostpath: ${here}/volumes/mitmproxy
-    vboxpath: /var/lib/sximada/mitmproxy
-    directory:
-      - ${here}/volumes/mitmproxy/certs
+  # mitmproxy:
+  #   hostpath: ${here}/volumes/mitmproxy
+  #   vboxpath: /var/lib/sximada/mitmproxy
+  #   directory:
+  #     - ${here}/volumes/mitmproxy/certs
 
-  jupyter:
-    hostpath: ${here}/volumes/jupyter
-    vboxpath: /var/lib/sximada/jupyter
-    directory:
-      - ${here}/volumes/jupyter/notebooks
+  # jupyter:
+  #   hostpath: ${here}/volumes/jupyter
+  #   vboxpath: /var/lib/sximada/jupyter
+  #   directory:
+  #     - ${here}/volumes/jupyter/notebooks
 
-  fluentd:
-    hostpath: ${here}/volumes/fluentd
-    vboxpath: /var/lib/sximada/fluentd
-    directory:
-      - ${here}/volumes/fluentd/fluentd/etc
-      - ${here}/volumes/fluentd/fluentd/plugins
+  # fluentd:
+  #   hostpath: ${here}/volumes/fluentd
+  #   vboxpath: /var/lib/sximada/fluentd
+  #   directory:
+  #     - ${here}/volumes/fluentd/fluentd/etc
+  #     - ${here}/volumes/fluentd/fluentd/plugins
 
-  apt-cacher-ng:
-    hostpath: ${here}/volumes/apt-cacher-ng
-    vboxpath: /var/lib/sximada/apt-cacher-ng
-    dmode: 777
-    directory:
-      - ${here}/volumes/apt-cacher-ng/var/cache/apt-cacher-ng
+  # apt-cacher-ng:
+  #   hostpath: ${here}/volumes/apt-cacher-ng
+  #   vboxpath: /var/lib/sximada/apt-cacher-ng
+  #   dmode: 777
+  #   directory:
+  #     - ${here}/volumes/apt-cacher-ng/var/cache/apt-cacher-ng
