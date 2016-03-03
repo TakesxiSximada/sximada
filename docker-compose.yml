@@ -11,12 +11,28 @@ services:
       - "443:443"
     volumes_from:
       - volume-sximada
+    links:
+      - www:www.internal
 
   volume-sximada:
     image: busybox
     volumes:
       - /var/lib/sximada/sximada/etc/nginx/conf.d:/etc/nginx/conf.d
       - /var/lib/sximada/sximada/etc/ssl/private/sximada:/etc/ssl/private/sximada
+
+  www:
+    image: nginx
+    expose:
+      - "80"
+    volumes_from:
+      - volume-www
+
+  volume-www:
+    image: busybox
+    volumes:
+      - /var/lib/sximada/www/etc/nginx/conf.d:/etc/nginx/conf.d
+      - /var/lib/sximada/www/etc/ssl/private/sximada:/etc/ssl/private/sximada
+      - /var/src/sximada/www:/var/www/www.sximada.com
 
   # djangoexample:
   #   build: djangoexample

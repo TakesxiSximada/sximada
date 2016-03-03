@@ -1,10 +1,20 @@
-PHONY: sximada
+PHONY: up down restart
 
-sximada:
+restart: up down
+
+up:
+	docker-volume directory
+	make sximada-cert
+	docker-volume add
+	docker-volume mount
+	docker-compose up -d
+
+down:
 	docker-compose stop
 	docker-compose kill
 	docker-compose rm -f
-	docker-compose up -d
+	docker-volume umount
+	docker-volume remove
 
 # ca:
 # 	openssl rand 1024 -out tmp/random.dump  # seedの生成

@@ -8,6 +8,23 @@ volumes:
       - ${here}/volumes/sximada/etc/nginx/conf.d
       - ${here}/volumes/sximada/etc/ssl/private/sximada
 
+  www:
+    hostpath: ${here}/volumes/www
+    vboxpath: /var/lib/sximada/www
+    uid: 104
+    gid: 107
+    directory:
+      - ${here}/volumes/www/etc/nginx/conf.d
+      - ${here}/volumes/www/etc/ssl/private/sximada
+
+  www-src:
+    hostpath: ${here}/www
+    vboxpath: /var/src/sximada/www
+    uid: 104
+    gid: 107
+
+
+
   # djangoexample-src:
   #   hostpath: ${here}/djangoexample
   #   vboxpath: /var/lib/sximada/src/djangoexample
