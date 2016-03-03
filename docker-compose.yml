@@ -1,8 +1,29 @@
 version: '2'
 
 services:
+  fluentd:
+    image: fluent/fluentd:latest
+    env_file:
+      - databag/fluentd.env
+    ports:
+      - 24224:24224
+    volumes_from:
+      - volume-fluentd
+  volume-fluentd:
+    image: busybox:latest
+    volumes:
+      - /var/lib/sximada/fluentd/fluentd/etc:/fluentd/etc
+      - /var/lib/sximada/fluentd/fluentd/plugins:/fluentd/plugins
+
   sximada:
     image: nginx
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        fluentd-tag: docker.{{.FullID}}
+    depends_on:
+      - fluentd
     expose:
       - "80"
       - "443"
@@ -13,7 +34,7 @@ services:
       - volume-sximada
     links:
       - www:www.internal
-
+      - djangoexample:djangoexample.internal
   volume-sximada:
     image: busybox
     volumes:
@@ -22,11 +43,17 @@ services:
 
   www:
     image: nginx
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        fluentd-tag: docker.{{.FullID}}
+    depends_on:
+      - fluentd
     expose:
       - "80"
     volumes_from:
       - volume-www
-
   volume-www:
     image: busybox
     volumes:
@@ -34,29 +61,26 @@ services:
       - /var/lib/sximada/www/etc/ssl/private/sximada:/etc/ssl/private/sximada
       - /var/src/sximada/www:/var/www/www.sximada.com
 
-  # djangoexample:
-  #   build: djangoexample
-  #   env_file:
-  #     - databag/djangoexample.env
-  #   volumes_from:
-  #     - volume-djangoexample
-  #   links:
-  #     - redis:redis.internal
-  #     - mysql:mysql.internal
-  #   expose:
-  #     - 8000
-  #   ports:
-  #     - 8000:8000
-
-  # volume-djangoexample:
-  #   image: busybox
-  #   volumes:
-  #     - /var/lib/sximada/src/djangoexample:/srv/sximada/djangoexample/src
-  #     - /var/lib/sximada/djangoexample/var:/srv/sximada/djangoexample/var
-  #     - /var/lib/sximada/djangoexample/log:/srv/sximada/djangoexample/log
-  #     - /var/lib/sximada/djangoexample/etc:/srv/sximada/djangoexample/etc
-  #     - /var/lib/sximada/djangoexample/settings:/srv/sximada/djangoexample/settings
-  #     - /var/lib/sximada/djangoexample/tmp:/srv/sximada/djangoexample/tmp
+  djangoexample:
+    build: djangoexample
+    env_file:
+      - databag/djangoexample.env
+    volumes_from:
+      - volume-djangoexample
+    links:
+      - redis:redis.internal
+      - mysql:mysql.internal
+    expose:
+      - 8000
+  volume-djangoexample:
+    image: busybox
+    volumes:
+      - /var/src/sximada/djangoexample:/srv/sximada/djangoexample/src
+      - /var/lib/sximada/djangoexample/var:/srv/sximada/djangoexample/var
+      - /var/lib/sximada/djangoexample/log:/srv/sximada/djangoexample/log
+      - /var/lib/sximada/djangoexample/etc:/srv/sximada/djangoexample/etc
+      - /var/lib/sximada/djangoexample/settings:/srv/sximada/djangoexample/settings
+      - /var/lib/sximada/djangoexample/tmp:/srv/sximada/djangoexample/tmp
 
   # nginx:
   #   image: nginx:latest
@@ -74,15 +98,6 @@ services:
   #     - 80:80
   #     - 443:443
 
-  # fluentd:
-  #   image: fluent/fluentd:latest
-  #   env_file:
-  #     - databag/fluentd.env
-  #   ports:
-  #     - 24224:24224
-  #   volumes_from:
-  #     - volume-fluentd
-
   # apt-cacher-ng:
   #   build: apt-cacher-ng
   #   logging:
@@ -96,12 +111,6 @@ services:
   #     - 3142:3142
   #   volumes_from:
   #     - volume-apt-cacher-ng
-
-  # volume-fluentd:
-  #   image: busybox:latest
-  #   volumes:
-  #     - /var/lib/sximada/fluentd/fluentd/etc:/fluentd/etc
-  #     - /var/lib/sximada/fluentd/fluentd/plugins:/fluentd/plugins
 
   # volume-apt-cacher-ng:
   #   image: busybox:latest
@@ -126,22 +135,22 @@ services:
   # rabbitmq:
   #   image: rabbitmq:latest
 
-  # redis:
-  #   image: redis:latest
+  redis:
+    image: redis:latest
 
-  # mysql:
-  #   image: mysql:latest
-  #   env_file:
-  #     - databag/mysql.env
-  #   volumes_from:
-  #     - volume-mysql
+  mysql:
+    image: mysql:latest
+    env_file:
+      - databag/mysql.env
+    volumes_from:
+      - volume-mysql
 
-  # volume-mysql:
-  #   image: busybox
-  #   volumes:
-  #     - /var/lib/sximada/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-  #     - /var/lib/sximada/mysql/var/lib/mysql:/var/lib/mysql
-  #     - /var/lib/sximada/mysql/var/log/mysql:/var/log/mysql
+  volume-mysql:
+    image: busybox
+    volumes:
+      - /var/lib/sximada/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - /var/lib/sximada/mysql/var/lib/mysql:/var/lib/mysql
+      - /var/lib/sximada/mysql/var/log/mysql:/var/log/mysql
 
   # fake_sns:
   #   build: docker-fake-sns
