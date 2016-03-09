@@ -4,10 +4,10 @@ current:
 	ln -sf $(TARGET) current
 
 enc:
-	$(SHELL) crypto.sh enc
+	$(SHELL) bin/crypto.sh enc
 
 dec:
-	$(SHELL) crypto.sh dec
+	$(SHELL) bin/crypto.sh dec
 
 init:
 	rm -f current/*.gpg
