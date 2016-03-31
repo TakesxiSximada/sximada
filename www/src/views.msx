@@ -1,0 +1,6 @@
+var m = require('mithril');
+
+
+module.exports.sximada = function (ctrl){return (
+<h1>SXIMADA</h1>
+)};
