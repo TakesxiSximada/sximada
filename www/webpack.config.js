@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const conbimeLoaders = require('webpack-combine-loaders');
 
 
 var plugins = [
@@ -9,23 +8,7 @@ var plugins = [
     }),
 ];
 
-const babel_msx_loader = conbimeLoaders([
-    {
-        loader: 'msx-loader',
-    },
-    {
-        loader: 'babel',
-        query: {
-            presets: ['es2015'],
-            plugins: [
-                "transform-es2015-arrow-functions",
-                "transform-object-assign",
-                "transform-array-from",
-            ],
-        },
-    },
-]);
-
+var combineLoaderMsxBabel = 'babel?presets=es2015!msx-loader?harmony=true&target=es2015shim&plugins=[transform-object-assign,transform-es2015-arrow-functions,transform-array-from]';
 
 
 module.exports = {
@@ -61,14 +44,17 @@ module.exports = {
                 test: /\.styl/,
                 exclude: /(node_modules|bower_components)/,
             },
-            { // for ECMA Script 6
+            { // for ECMA Script 2015
                 loader: 'babel',
                 test: /\.js$/,
                 exclude: /node_modules/,
                 query: {
                     presets: ['es2015'],
                     plugins: [
-                        "transform-es2015-arrow-functions",
+                        'transform-es2015-arrow-functions',
+                        'transform-object-assign',
+                        'transform-es2015-arrow-functions',
+                        'transform-array-from',
                     ],
                 }
             },

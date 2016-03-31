@@ -26,9 +26,9 @@ down:
 # 	openssl genrsa -out tmp/ca.key 1024
 
 
-sximada-cert: tmp/dummy.key tmp/dummy.crt
-	cp tmp/dummy.key volumes/sximada/etc/ssl/private/sximada/sximada.key
-	cp tmp/dummy.crt volumes/sximada/etc/ssl/private/sximada/sximada.crt
+gk-cert: tmp/dummy.key tmp/dummy.crt
+	cp tmp/dummy.key volumes/gk/etc/ssl/private/gk/gk.key
+	cp tmp/dummy.crt volumes/gk/etc/ssl/private/gk/gk.crt
 
 tmp/dummy.crt: tmp/dummy.key
 	openssl genrsa -out tmp/dummy.key 1024
