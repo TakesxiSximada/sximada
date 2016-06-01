@@ -1,12 +1,11 @@
 version: '2'
 
-services:
-  # airflow:
-  #   image: airflow
-  #   build:
-  #     context: docker-airflow
-  #     dockerfile: Dockerfile
+volumes:
+  VOLUME-test:
+    external: false
 
+
+services:
   gk:
     image: nginx
     expose:
@@ -17,10 +16,53 @@ services:
       - "443:443"
     # volumes_from:
     #   - VOLUME-gk
-    # links:
-    #    - www:www.internal
-    #    - oauth2proxy:oauth2proxy.internal
-    #    - jupyter-notebook:jupyter-notebook.internal
+    links:
+       # - www:www.internal
+       # - oauth2proxy:oauth2proxy.internal
+       - jupyter-notebook:jupyter-notebook.internal
+
+  test1:
+    image: busybox
+    command: tail -f /dev/null
+    volumes:
+      - VOLUME-test:/test
+
+  test2:
+    image: busybox
+    command: tail -f /dev/null
+    volumes:
+      - VOLUME-test:/test
+
+
+  s3:
+    image: lphoward/fake-s3
+    expose:
+      - "4569"
+    ports:
+      - "4569:4569"
+    volumes_from:
+      - VOLUME-s3
+
+  VOLUME-s3:
+    image: busybox:latest
+    volumes:
+      - /var/lib/sximada/s3/fakes3_root:/fakes3_root
+
+  sns:
+    image: sximada-sns
+    build:
+      context: docker-fake-sns
+      dockerfile: Dockerfile
+    expose:
+      - "9292"
+    ports:
+      - "9292:9292"
+
+  # airflow:
+  #   image: airflow
+  #   build:
+  #     context: docker-airflow
+  #     dockerfile: Dockerfile
 
   # VOLUME-gk:
   #   image: busybox
@@ -202,22 +244,16 @@ services:
   #     - /var/lib/sximada/mysql/var/lib/mysql:/var/lib/mysql
   #     - /var/lib/sximada/mysql/var/log/mysql:/var/log/mysql
 
-  # # fake_sns:
-  # #   build: docker-fake-sns
 
-  s3:
-    image: lphoward/fake-s3
-    expose:
-      - "4569"
-    ports:
-      - "4569:4569"
-    volumes_from:
-      - VOLUME-s3
 
-  VOLUME-s3:
-    image: busybox:latest
-    volumes:
-      - /var/lib/sximada/s3/fakes3_root:/fakes3_root
+  # sns:
+  #   image: feathj/fake-sns
+  #   volumes_from:
+  #     - VOLUME-sns
+  # VOLUME-s3:
+  #   image: busybox:latest
+  #   volumes:
+  #     - /var/lib/sximada/s3/fakes3_root:/fakes3_root
 
   # # openstack-swift:
   # #   image: serverascode/swift-onlyone
@@ -343,12 +379,12 @@ services:
   # # sinopia:  # Private npm repository server
   # #   image: rnbwd/sinopia
 
-  # jupyter-notebook:  # jupyter notebook
-  #   image: jupyter/notebook
-  #   expose:
-  #     - 8888
-  #   volumes_from:
-  #     - VOLUME-jupyter-notebook
+  jupyter-notebook:
+    image: jupyter/notebook
+    expose:
+      - 8888
+    volumes_from:
+      - VOLUME-jupyter-notebook
   #   # logging:
   #   #   driver: fluentd
   #   #   options:
@@ -357,10 +393,10 @@ services:
   #   # depends_on:
   #   #   - fluentd
 
-  # VOLUME-jupyter-notebook:
-  #   image: busybox
-  #   volumes:
-  #     - /var/lib/sximada/jupyter-notebook:/notebooks
+  VOLUME-jupyter-notebook:
+    image: busybox
+    volumes:
+      - /var/lib/sximada/jupyter-notebook:/notebooks
 
   # # mitmproxy:
   # #   image: mitmproxy/mitmproxy:latest
